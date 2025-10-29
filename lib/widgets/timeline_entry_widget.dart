@@ -117,7 +117,7 @@ class _TimelineEntryWidgetState extends State<TimelineEntryWidget>
             color: CaremixerColors.white,
           ),
         ),
-        // Timeline line (only if not last) - stretches to fill available space
+
         if (!widget.isLast)
           Expanded(
             child: Container(
@@ -133,64 +133,132 @@ class _TimelineEntryWidgetState extends State<TimelineEntryWidget>
   }
 
   Widget _buildContent() {
+    final isImportant = _isImportantEvent(widget.entry.type);
+    final highlightColor = _getHighlightColor(widget.entry.type);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Card(
-        elevation: 2,
-
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Title and timestamp
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        elevation: isImportant ? 4 : 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: isImportant
+              ? BorderSide(
+                  color: highlightColor.withValues(alpha: 0.3),
+                  width: 1,
+                )
+              : BorderSide.none,
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: isImportant
+                ? Border(left: BorderSide(color: highlightColor, width: 4))
+                : null,
+          ),
+          child: Container(
+            decoration: isImportant
+                ? BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: highlightColor.withValues(alpha: 0.05),
+                  )
+                : null,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Text(
-                      widget.entry.title,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
+                  // Title and timestamp
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: [
+                            if (isImportant) ...[
+                              Icon(
+                                AppUtils.getTimelineIcon(widget.entry.type),
+                                size: 18,
+                                color: highlightColor,
+                              ),
+                              const SizedBox(width: 8),
+                            ],
+                            Expanded(
+                              child: Text(
+                                widget.entry.title,
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(
+                                      fontWeight: isImportant
+                                          ? FontWeight.w700
+                                          : FontWeight.w600,
+                                      color: isImportant
+                                          ? highlightColor
+                                          : null,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                      Text(
+                        AppUtils.formatTimestamp(widget.entry.timestamp),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: CaremixerColors.grey,
+                        ),
+                      ),
+                    ],
                   ),
+                  const SizedBox(height: 8),
+                  // Message
                   Text(
-                    AppUtils.formatTimestamp(widget.entry.timestamp),
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: CaremixerColors.grey,
-                    ),
+                    widget.entry.message,
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              // Message
-              Text(
-                widget.entry.message,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              // Author (if available)
-              if (widget.entry.author != null) ...[
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(Icons.person, size: 16, color: CaremixerColors.grey),
-                    const SizedBox(width: 4),
-                    Text(
-                      widget.entry.author!,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: CaremixerColors.grey,
-                        fontStyle: FontStyle.italic,
-                      ),
+                  // Author (if available)
+                  if (widget.entry.author != null) ...[
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.person,
+                          size: 16,
+                          color: CaremixerColors.grey,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          widget.entry.author!,
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: CaremixerColors.grey,
+                                fontStyle: FontStyle.italic,
+                              ),
+                        ),
+                      ],
                     ),
                   ],
-                ),
-              ],
-            ],
+                ],
+              ),
+            ),
           ),
         ),
       ),
     );
+  }
+
+  /// Check if the event type is important
+  bool _isImportantEvent(String type) {
+    return type.toLowerCase() == 'success' || type.toLowerCase() == 'alert';
+  }
+
+  /// Get the highlight color for important events
+  Color _getHighlightColor(String type) {
+    switch (type.toLowerCase()) {
+      case 'success':
+        return CaremixerColors.green;
+      case 'alert':
+        return CaremixerColors.darkRed;
+      default:
+        return CaremixerColors.grey;
+    }
   }
 }
