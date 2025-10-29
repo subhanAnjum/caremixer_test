@@ -2,41 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/theme/app_theme.dart';
 import 'core/utils/app_utils.dart';
+import 'providers/theme_provider.dart';
 import 'views/timeline/timeline_view.dart';
 import 'views/pokemon/pokemon_view.dart';
 import 'views/chat/chat_view.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 /// Main app widget
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ProviderScope(
-      child: MaterialApp(
-        title: 'Caremixer Assessment',
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        home: const MainNavigationView(),
-        debugShowCheckedModeBanner: false,
-      ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
+
+    return MaterialApp(
+      title: 'Caremixer Assessment',
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: themeMode,
+      home: const MainNavigationView(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
 /// Main navigation view with bottom navigation
-class MainNavigationView extends StatefulWidget {
+class MainNavigationView extends ConsumerStatefulWidget {
   const MainNavigationView({super.key});
 
   @override
-  State<MainNavigationView> createState() => _MainNavigationViewState();
+  ConsumerState<MainNavigationView> createState() => _MainNavigationViewState();
 }
 
-class _MainNavigationViewState extends State<MainNavigationView> {
+class _MainNavigationViewState extends ConsumerState<MainNavigationView> {
   int _currentIndex = 0;
 
   final List<Widget> _views = [
@@ -53,10 +55,11 @@ class _MainNavigationViewState extends State<MainNavigationView> {
     Icons.chat,
   ];
 
-  bool get _isDarMode => Theme.of(context).brightness == Brightness.dark;
-
   @override
   Widget build(BuildContext context) {
+    final themeMode = ref.watch(themeModeProvider);
+    final isDarkMode = themeMode == ThemeMode.dark;
+
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: _views),
       bottomNavigationBar: BottomNavigationBar(
@@ -67,11 +70,11 @@ class _MainNavigationViewState extends State<MainNavigationView> {
           });
         },
         type: BottomNavigationBarType.fixed,
-        backgroundColor: _isDarMode
-            ? CaremixerColors.darkGreen
+        backgroundColor: isDarkMode
+            ? const Color(0xFF1E1E1E)
             : CaremixerColors.white,
         selectedItemColor: CaremixerColors.orange,
-        unselectedItemColor: _isDarMode
+        unselectedItemColor: isDarkMode
             ? CaremixerColors.white
             : CaremixerColors.grey,
         items: _icons.asMap().entries.map((entry) {

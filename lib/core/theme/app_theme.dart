@@ -115,11 +115,15 @@ class AppTheme {
         brightness: Brightness.dark,
         primary: CaremixerColors.orange,
         secondary: CaremixerColors.green,
-        surface: CaremixerColors.darkGreen,
+        surface: const Color(0xFF1E1E1E), // Dark grey instead of green
+        surfaceContainerHighest: const Color(
+          0xFF2D2D2D,
+        ), // Slightly lighter grey
         error: CaremixerColors.darkRed,
       ),
+      scaffoldBackgroundColor: const Color(0xFF121212), // Very dark background
       appBarTheme: const AppBarTheme(
-        backgroundColor: CaremixerColors.darkGreen,
+        backgroundColor: Color(0xFF1E1E1E), // Dark grey instead of green
         foregroundColor: CaremixerColors.white,
         elevation: 0,
         centerTitle: true,
@@ -131,7 +135,7 @@ class AppTheme {
         ),
       ),
       cardTheme: CardThemeData(
-        color: CaremixerColors.darkGreen,
+        color: const Color(0xFF2D2D2D), // Dark grey cards
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
@@ -145,7 +149,9 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: CaremixerColors.darkBrown.withValues(alpha: 0.3),
+        fillColor: const Color(
+          0xFF2D2D2D,
+        ).withValues(alpha: 0.5), // Dark grey input fields
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -180,6 +186,31 @@ class AppTheme {
           horizontal: 16,
           vertical: 12,
         ),
+      ),
+      textTheme: const TextTheme(
+        headlineLarge: TextStyle(
+          fontSize: 32,
+          fontWeight: FontWeight.bold,
+          color: CaremixerColors.white,
+        ),
+        headlineMedium: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w600,
+          color: CaremixerColors.white,
+        ),
+        titleLarge: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: CaremixerColors.white,
+        ),
+        titleMedium: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          color: CaremixerColors.white,
+        ),
+        bodyLarge: TextStyle(fontSize: 16, color: CaremixerColors.white),
+        bodyMedium: TextStyle(fontSize: 14, color: CaremixerColors.white),
+        bodySmall: TextStyle(fontSize: 12, color: CaremixerColors.grey),
       ),
     );
   }

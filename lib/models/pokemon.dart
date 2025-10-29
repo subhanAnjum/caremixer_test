@@ -15,13 +15,14 @@ class Pokemon {
   factory Pokemon.fromJson(Map<String, dynamic> json) {
     final url = json['url'] as String;
     final id = int.parse(url.split('/').reversed.elementAt(1));
+    final name = json['name'] as String;
 
     return Pokemon(
-      name: json['name'] as String,
+      name: name,
       url: url,
       id: id,
       imageUrl:
-          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/$id.png',
+          'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$id.png',
     );
   }
 

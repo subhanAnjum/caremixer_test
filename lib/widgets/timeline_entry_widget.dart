@@ -70,19 +70,18 @@ class _TimelineEntryWidgetState extends State<TimelineEntryWidget>
           child: SlideTransition(
             position: _slideAnimation,
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8.0,
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Timeline dot and line
-                  _buildTimelineIndicator(),
-                  const SizedBox(width: 16),
-                  // Content
-                  Expanded(child: _buildContent()),
-                ],
+              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+              child: IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Timeline dot and line
+                    _buildTimelineIndicator(),
+                    const SizedBox(width: 16),
+                    // Content
+                    Expanded(child: _buildContent()),
+                  ],
+                ),
               ),
             ),
           ),
@@ -118,15 +117,15 @@ class _TimelineEntryWidgetState extends State<TimelineEntryWidget>
             color: CaremixerColors.white,
           ),
         ),
-        // Timeline line (only if not last)
+        // Timeline line (only if not last) - stretches to fill available space
         if (!widget.isLast)
-          Container(
-            width: 2,
-            height: 60,
-            margin: const EdgeInsets.only(top: 8),
-            decoration: BoxDecoration(
-              color: CaremixerColors.white,
-              borderRadius: BorderRadius.circular(1),
+          Expanded(
+            child: Container(
+              width: 2,
+              decoration: BoxDecoration(
+                color: CaremixerColors.white,
+                borderRadius: BorderRadius.circular(1),
+              ),
             ),
           ),
       ],
@@ -134,58 +133,62 @@ class _TimelineEntryWidgetState extends State<TimelineEntryWidget>
   }
 
   Widget _buildContent() {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Title and timestamp
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    widget.entry.title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Card(
+        elevation: 2,
+
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Title and timestamp
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.entry.title,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-                Text(
-                  AppUtils.formatTimestamp(widget.entry.timestamp),
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodySmall?.copyWith(color: CaremixerColors.grey),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            // Message
-            Text(
-              widget.entry.message,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            // Author (if available)
-            if (widget.entry.author != null) ...[
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Icon(Icons.person, size: 16, color: CaremixerColors.grey),
-                  const SizedBox(width: 4),
                   Text(
-                    widget.entry.author!,
+                    AppUtils.formatTimestamp(widget.entry.timestamp),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: CaremixerColors.grey,
-                      fontStyle: FontStyle.italic,
                     ),
                   ),
                 ],
               ),
+              const SizedBox(height: 8),
+              // Message
+              Text(
+                widget.entry.message,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              // Author (if available)
+              if (widget.entry.author != null) ...[
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Icon(Icons.person, size: 16, color: CaremixerColors.grey),
+                    const SizedBox(width: 4),
+                    Text(
+                      widget.entry.author!,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: CaremixerColors.grey,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

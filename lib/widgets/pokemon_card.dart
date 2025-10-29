@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../core/utils/app_utils.dart';
 import '../../models/pokemon.dart';
+import '../../providers/theme_provider.dart';
 
 /// Pokemon card widget
-class PokemonCard extends StatefulWidget {
+class PokemonCard extends ConsumerStatefulWidget {
   final Pokemon pokemon;
 
   const PokemonCard({super.key, required this.pokemon});
 
   @override
-  State<PokemonCard> createState() => _PokemonCardState();
+  ConsumerState<PokemonCard> createState() => _PokemonCardState();
 }
 
-class _PokemonCardState extends State<PokemonCard>
+class _PokemonCardState extends ConsumerState<PokemonCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
@@ -40,7 +42,8 @@ class _PokemonCardState extends State<PokemonCard>
 
   @override
   Widget build(BuildContext context) {
-    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final themeMode = ref.watch(themeModeProvider);
+    final isDarkMode = themeMode == ThemeMode.dark;
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
