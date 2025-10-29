@@ -4,7 +4,7 @@ import '../models/chat_message.dart';
 /// Chat state notifier
 class ChatNotifier extends StateNotifier<List<ChatMessage>> {
   ChatNotifier() : super(_getInitialMessages()) {
-    _simulateBotResponse();
+    // _simulateBotResponse();
   }
 
   /// Add a new message from user

@@ -93,3 +93,7 @@ class CaremixerColors {
   static const Color grey = Color(0xFF757575);
   static const Color lightGrey = Color(0xFFF5F5F5);
 }
+
+class AppImages {
+  static const String icPokeball = 'assets/images/pokeball_icon.png';
+}
