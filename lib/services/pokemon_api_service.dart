@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer' show log;
 import 'package:http/http.dart' as http;
 import '../models/pokemon.dart';
+import '../models/pokemon_details.dart';
 
 /// Pokemon API service
 class PokemonApiService {
@@ -40,6 +41,50 @@ class PokemonApiService {
           .toList();
     } catch (e) {
       throw Exception('Search error: $e');
+    }
+  }
+
+  /// Fetch detailed Pokemon information by ID
+  Future<PokemonDetails> fetchPokemonDetails(int id) async {
+    try {
+      final url = Uri.parse('$_baseUrl/pokemon-species/$id');
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final speciesData = json.decode(response.body) as Map<String, dynamic>;
+
+        // Fetch Pokemon data for stats
+        final pokemonUrl = Uri.parse('$_baseUrl/pokemon/$id');
+        final pokemonResponse = await http.get(pokemonUrl);
+
+        if (pokemonResponse.statusCode == 200) {
+          final pokemonData =
+              json.decode(pokemonResponse.body) as Map<String, dynamic>;
+
+          // Combine species and Pokemon data
+          final combinedData = {
+            ...pokemonData,
+            'flavor_text_entries': speciesData['flavor_text_entries'],
+            'habitat': speciesData['habitat'],
+            'capture_rate': speciesData['capture_rate'],
+            'base_happiness': speciesData['base_happiness'],
+            'egg_groups': speciesData['egg_groups'],
+          };
+
+          return PokemonDetails.fromJson(combinedData);
+        } else {
+          throw Exception(
+            'Failed to load Pokemon data: ${pokemonResponse.statusCode}',
+          );
+        }
+      } else {
+        throw Exception(
+          'Failed to load Pokemon species: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      log('Pokemon details error: $e');
+      throw Exception('Failed to load Pokemon details: $e');
     }
   }
 }

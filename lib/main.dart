@@ -61,7 +61,7 @@ class _MainNavigationViewState extends ConsumerState<MainNavigationView> {
     final isDarkMode = themeMode == ThemeMode.dark;
 
     return Scaffold(
-      body: _views[_currentIndex],
+      body: IndexedStack(index: _currentIndex, children: _views),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {

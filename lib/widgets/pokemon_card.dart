@@ -5,6 +5,7 @@ import '../../core/utils/app_utils.dart';
 import '../../core/utils/pokemon_utils.dart';
 import '../../models/pokemon.dart';
 import '../../providers/theme_provider.dart';
+import '../../views/pokemon_details/pokemon_details_view.dart';
 
 /// Pokemon card widget
 class PokemonCard extends ConsumerStatefulWidget {
@@ -59,7 +60,7 @@ class _PokemonCardState extends ConsumerState<PokemonCard>
               borderRadius: BorderRadius.circular(24),
             ),
             child: InkWell(
-              onTap: () => _showPokemonDetails(context, pokemonType),
+              onTap: () => _navigateToDetails(context),
               borderRadius: BorderRadius.circular(24),
               child: Container(
                 height: 160,
@@ -319,40 +320,46 @@ class _PokemonCardState extends ConsumerState<PokemonCard>
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(20),
-                          child: CachedNetworkImage(
-                            imageUrl: widget.pokemon.imageUrl,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    typeColor.withValues(alpha: 0.1),
-                                    typeColor.withValues(alpha: 0.05),
-                                  ],
-                                ),
-                              ),
-                              child: const Center(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    CaremixerColors.white,
+                          child: Hero(
+                            tag: 'pokemon-${widget.pokemon.id}',
+                            child: Material(
+                              color: Colors.transparent,
+                              child: CachedNetworkImage(
+                                imageUrl: widget.pokemon.imageUrl,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        typeColor.withValues(alpha: 0.1),
+                                        typeColor.withValues(alpha: 0.05),
+                                      ],
+                                    ),
+                                  ),
+                                  child: const Center(
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        CaremixerColors.white,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            errorWidget: (context, url, error) => Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    typeColor.withValues(alpha: 0.1),
-                                    typeColor.withValues(alpha: 0.05),
-                                  ],
+                                errorWidget: (context, url, error) => Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        typeColor.withValues(alpha: 0.1),
+                                        typeColor.withValues(alpha: 0.05),
+                                      ],
+                                    ),
+                                  ),
+                                  child: Icon(
+                                    Icons.pets,
+                                    color: typeColor.withValues(alpha: 0.5),
+                                    size: 32,
+                                  ),
                                 ),
-                              ),
-                              child: Icon(
-                                Icons.pets,
-                                color: typeColor.withValues(alpha: 0.5),
-                                size: 32,
                               ),
                             ),
                           ),
@@ -369,112 +376,14 @@ class _PokemonCardState extends ConsumerState<PokemonCard>
     );
   }
 
-  void _showPokemonDetails(BuildContext context, String pokemonType) {
-    final typeColor = PokemonUtils.getTypeColor(pokemonType);
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Row(
-          children: [
-            Icon(
-              PokemonUtils.getTypeIcon(pokemonType),
-              color: typeColor,
-              size: 24,
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                PokemonUtils.formatPokemonName(widget.pokemon.name),
-                style: TextStyle(color: typeColor, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
+  /// Navigate to Pokemon details page
+  void _navigateToDetails(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => PokemonDetailsView(
+          pokemonId: widget.pokemon.id,
+          heroImageUrl: widget.pokemon.imageUrl,
         ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              height: 150,
-              width: 150,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: typeColor.withValues(alpha: 0.3),
-                    blurRadius: 12,
-                    spreadRadius: 2,
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: CachedNetworkImage(
-                  imageUrl: widget.pokemon.imageUrl,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) => Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          typeColor.withValues(alpha: 0.1),
-                          typeColor.withValues(alpha: 0.05),
-                        ],
-                      ),
-                    ),
-                    child: const Center(child: CircularProgressIndicator()),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          typeColor.withValues(alpha: 0.1),
-                          typeColor.withValues(alpha: 0.05),
-                        ],
-                      ),
-                    ),
-                    child: Icon(
-                      Icons.pets,
-                      color: typeColor.withValues(alpha: 0.5),
-                      size: 48,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: typeColor,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                pokemonType,
-                style: const TextStyle(
-                  color: CaremixerColors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Pokemon ID: #${widget.pokemon.id}',
-              style: const TextStyle(fontSize: 16),
-            ),
-            Text(
-              'Generation: ${PokemonUtils.getPokemonGeneration(widget.pokemon.id)}',
-              style: TextStyle(color: CaremixerColors.grey, fontSize: 14),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Close'),
-          ),
-        ],
       ),
     );
   }

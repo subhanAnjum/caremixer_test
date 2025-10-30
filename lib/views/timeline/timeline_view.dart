@@ -19,24 +19,6 @@ class TimelineView extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Timeline'),
         actions: [
-          // Dark mode toggle button
-          IconButton(
-            icon: Icon(
-              themeMode == ThemeMode.dark ? Icons.light_mode : Icons.dark_mode,
-            ),
-            onPressed: () {
-              themeNotifier.toggleTheme();
-              AppUtils.showSuccessSnackBar(
-                context,
-                themeMode == ThemeMode.dark
-                    ? 'Switched to light mode'
-                    : 'Switched to dark mode',
-              );
-            },
-            tooltip: themeMode == ThemeMode.dark
-                ? 'Switch to light mode'
-                : 'Switch to dark mode',
-          ),
           // Theme mode menu
           PopupMenuButton<ThemeMode>(
             icon: const Icon(Icons.palette),

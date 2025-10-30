@@ -202,7 +202,7 @@ class PokemonUtils {
         return const Color(0xFFB2BEC3);
       case 'normal':
       default:
-        return const Color(0xFFDDD6FE);
+        return const Color(0xFFA8A8A8); // Darker grey for better visibility
     }
   }
 
