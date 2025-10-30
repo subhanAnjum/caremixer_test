@@ -35,26 +35,42 @@ lib/
 ├── main.dart
 ├── core/
 │   ├── theme/
-│   │   └── app_theme.dart          # Caremixer color palette & themes
+│   │   └── app_theme.dart
 │   └── utils/
-│       └── app_utils.dart          # Utility functions & constants
+│       ├── app_utils.dart
+│       └── pokemon_utils.dart
 ├── models/
-│   ├── timeline_entry.dart         # Timeline data models
-│   ├── pokemon.dart               # Pokemon API models
-│   └── chat_message.dart          # Chat message models
+│   ├── timeline_entry.dart
+│   ├── pokemon.dart
+│   ├── pokemon_details.dart
+│   └── chat_message.dart
 ├── services/
-│   └── pokemon_api_service.dart   # Pokemon API integration
+│   └── pokemon_api_service.dart
 ├── providers/
-│   ├── pokemon_provider.dart      # Pokemon state management
-│   └── chat_provider.dart         # Chat state management
+│   ├── pokemon_provider.dart
+│   ├── pokemon_details_provider.dart
+│   ├── theme_provider.dart
+│   └── chat_provider.dart
 ├── views/
 │   ├── timeline/
-│   │   └── timeline_view.dart     # Timeline screen
+│   │   └── timeline_view.dart
+│   ├── pokemon_details/
+│   │   └── pokemon_details_view.dart
 │   ├── pokemon/
-│   │   └── pokemon_view.dart      # Pokemon screen
+│   │   └── pokemon_view.dart
 │   └── chat/
-│       └── chat_view.dart         # Chat screen
-└── widgets/                       # Timeline, Pokemon, Chat components
+│       └── chat_view.dart
+└── widgets/
+    ├── chat_bubble.dart
+    ├── chat_input_field.dart
+    ├── chat_participants_header.dart
+    ├── pokemon_card.dart
+    ├── pokemon_grid.dart
+    ├── pokemon_search_bar.dart
+    ├── pokemon_shimmer.dart
+    ├── stat_dial.dart
+    ├── timeline_entry_widget.dart
+    └── timeline_list.dart
 
 ```
 
