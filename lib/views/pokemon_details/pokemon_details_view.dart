@@ -6,6 +6,7 @@ import '../../core/utils/pokemon_utils.dart';
 import '../../models/pokemon_details.dart';
 import '../../providers/pokemon_details_provider.dart';
 import '../../widgets/stat_dial.dart';
+import '../../widgets/pokemon_shimmer.dart';
 
 /// Pokemon details view
 class PokemonDetailsView extends ConsumerStatefulWidget {
@@ -91,7 +92,7 @@ class _PokemonDetailsViewState extends ConsumerState<PokemonDetailsView>
             }
             return _buildPokemonDetails(context, details);
           },
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const PokemonDetailsShimmer(),
           error: (error, stack) => Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

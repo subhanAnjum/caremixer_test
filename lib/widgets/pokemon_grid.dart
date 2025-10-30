@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/utils/app_utils.dart';
 import '../providers/pokemon_provider.dart';
 import 'pokemon_card.dart';
+import 'pokemon_shimmer.dart';
 
 /// Pokemon grid widget
 class PokemonGrid extends ConsumerWidget {
@@ -31,7 +32,7 @@ class PokemonGrid extends ConsumerWidget {
                 return PokemonCard(pokemon: pokemon[index]);
               },
             ),
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const PokemonGridShimmer(),
       error: (error, stackTrace) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
